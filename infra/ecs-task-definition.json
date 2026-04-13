@@ -4,8 +4,8 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-execution",
-  "taskRoleArn": "arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-task",
+  "executionRoleArn": "arn:aws:iam::257212469506:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::257212469506:role/soccer-physics-engine-ecs-task",
   "runtimePlatform": {
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "soccer-physics-engine-api",
-      "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/soccer-physics-engine:latest",
+      "image": "257212469506.dkr.ecr.us-east-1.amazonaws.com/soccer-physics-engine:latest",
       "essential": true,
       "portMappings": [
         {
