@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: API Gateway configuration for the Soccer Physics Engine service.
+
+Parameters:
+  BackendBaseUrl:
+    Type: String
+    Default: https://api-backend.example.internal
+    Description: Base HTTPS URL for the ECS-backed FastAPI service.
+  StageName:
+    Type: String
+    Default: prod
+    Description: API Gateway stage name.
+  ApiName:
+    Type: String
+    Default: soccer-physics-engine-api
+    Description: Public API Gateway name.
+
+Resources:
+  SoccerPhysicsApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Ref ApiName
+      ProtocolType: HTTP
+      Description: Public edge API for the Soccer Physics Engine FastAPI service.
+
+  AnalyzeSequenceIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: POST
+      IntegrationUri: !Sub "${BackendBaseUrl}/analyze-sequence"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 29000
+
+  MatchReportIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: POST
+      IntegrationUri: !Sub "${BackendBaseUrl}/match-report"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 29000
+
+  LoadReportIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: POST
+      IntegrationUri: !Sub "${BackendBaseUrl}/load-report"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 29000
+
+  SearchSequencesIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: POST
+      IntegrationUri: !Sub "${BackendBaseUrl}/search-sequences"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 29000
+
+  PlayerProfileIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: GET
+      IntegrationUri: !Sub "${BackendBaseUrl}/player-profile/{player_id}"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 29000
+
+  HealthIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: GET
+      IntegrationUri: !Sub "${BackendBaseUrl}/health"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 5000
+
+  ModelInfoIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: GET
+      IntegrationUri: !Sub "${BackendBaseUrl}/model-info"
+      PayloadFormatVersion: "1.0"
+      TimeoutInMillis: 10000
+
+  AnalyzeSequenceRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "POST /analyze-sequence"
+      Target: !Sub "integrations/${AnalyzeSequenceIntegration}"
+
+  MatchReportRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "POST /match-report"
+      Target: !Sub "integrations/${MatchReportIntegration}"
+
+  LoadReportRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "POST /load-report"
+      Target: !Sub "integrations/${LoadReportIntegration}"
+
+  SearchSequencesRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "POST /search-sequences"
+      Target: !Sub "integrations/${SearchSequencesIntegration}"
+
+  PlayerProfileRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "GET /player-profile/{player_id}"
+      Target: !Sub "integrations/${PlayerProfileIntegration}"
+
+  HealthRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "GET /health"
+      Target: !Sub "integrations/${HealthIntegration}"
+
+  ModelInfoRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      RouteKey: "GET /model-info"
+      Target: !Sub "integrations/${ModelInfoIntegration}"
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref SoccerPhysicsApi
+      StageName: !Ref StageName
+      AutoDeploy: true
+      DefaultRouteSettings:
+        DetailedMetricsEnabled: true
+        ThrottlingBurstLimit: 200
+        ThrottlingRateLimit: 100
+      AccessLogSettings:
+        DestinationArn: arn:aws:logs:us-east-1:123456789012:log-group:/aws/apigateway/soccer-physics-engine
+        Format: >-
+          {"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","responseLength":"$context.responseLength","integrationLatency":"$context.integrationLatency"}
+
+Outputs:
+  ApiId:
+    Value: !Ref SoccerPhysicsApi
+  ApiEndpoint:
+    Value: !GetAtt SoccerPhysicsApi.ApiEndpoint
+  StageName:
+    Value: !Ref StageName

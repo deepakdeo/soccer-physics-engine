@@ -1,6 +1,23 @@
 aws:
   region: us-east-1
-  ecr_repository: your-ecr-repository
-  ecs_cluster: your-ecs-cluster
-  ecs_service: your-ecs-service
-  api_gateway_id: your-api-gateway-id
+  s3_bucket: soccer-physics-engine-artifacts
+  s3_bucket_arn: arn:aws:s3:::soccer-physics-engine-artifacts
+  ecr_repository_name: soccer-physics-engine
+  ecr_repository_arn: arn:aws:ecr:us-east-1:123456789012:repository/soccer-physics-engine
+  ecs_cluster_name: soccer-physics-engine-cluster
+  ecs_cluster_arn: arn:aws:ecs:us-east-1:123456789012:cluster/soccer-physics-engine-cluster
+  ecs_service_name: soccer-physics-engine-service
+  ecs_service_arn: arn:aws:ecs:us-east-1:123456789012:service/soccer-physics-engine-cluster/soccer-physics-engine-service
+  ecs_task_definition_family: soccer-physics-engine-api
+  ecs_task_execution_role_arn: arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-execution
+  ecs_task_role_arn: arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-task
+  api_gateway_api_id: abc123def4
+  api_gateway_execution_arn: arn:aws:execute-api:us-east-1:123456789012:abc123def4
+  api_gateway_stage_name: prod
+  api_gateway_stage_arn: arn:aws:apigateway:us-east-1::/apis/abc123def4/stages/prod
+  api_gateway_custom_domain_arn: arn:aws:apigateway:us-east-1::/domainnames/api.soccer-physics-engine.example.com
+  application_load_balancer_arn: arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/soccer-physics-engine-alb/1234567890abcdef
+  application_load_balancer_listener_arn: arn:aws:elasticloadbalancing:us-east-1:123456789012:listener/app/soccer-physics-engine-alb/1234567890abcdef/abcdef1234567890
+  cloudwatch_log_group_arn: arn:aws:logs:us-east-1:123456789012:log-group:/ecs/soccer-physics-engine
+  cloudwatch_alarm_topic_arn: arn:aws:sns:us-east-1:123456789012:soccer-physics-engine-alerts
+  artifact_kms_key_arn: arn:aws:kms:us-east-1:123456789012:key/11111111-2222-3333-4444-555555555555

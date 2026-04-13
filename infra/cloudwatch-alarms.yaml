@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudWatch alarm definitions for Soccer Physics Engine API reliability.
+
+Parameters:
+  ApiId:
+    Type: String
+    Default: abc123def4
+    Description: API Gateway identifier.
+  StageName:
+    Type: String
+    Default: prod
+    Description: API Gateway stage name.
+  AlarmTopicArn:
+    Type: String
+    Default: arn:aws:sns:us-east-1:123456789012:soccer-physics-engine-alerts
+    Description: SNS topic ARN for alarm notifications.
+
+Resources:
+  Api4xxErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: soccer-physics-engine-api-4xx-rate
+      AlarmDescription: Elevated client error rate on the public API.
+      Namespace: AWS/ApiGateway
+      MetricName: 4xx
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 25
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref ApiId
+        - Name: Stage
+          Value: !Ref StageName
+      AlarmActions:
+        - !Ref AlarmTopicArn
+
+  Api5xxErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: soccer-physics-engine-api-5xx-rate
+      AlarmDescription: Elevated server error rate on the public API.
+      Namespace: AWS/ApiGateway
+      MetricName: 5xx
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref ApiId
+        - Name: Stage
+          Value: !Ref StageName
+      AlarmActions:
+        - !Ref AlarmTopicArn
+
+  ApiLatencyP95Alarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: soccer-physics-engine-api-latency-p95
+      AlarmDescription: Sustained latency regression on the public API.
+      Namespace: AWS/ApiGateway
+      MetricName: Latency
+      ExtendedStatistic: p95
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 2500
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      Dimensions:
+        - Name: ApiId
+          Value: !Ref ApiId
+        - Name: Stage
+          Value: !Ref StageName
+      AlarmActions:
+        - !Ref AlarmTopicArn
+
+Outputs:
+  AlarmTopicArn:
+    Value: !Ref AlarmTopicArn

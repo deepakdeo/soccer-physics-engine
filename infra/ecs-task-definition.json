@@ -1,0 +1,70 @@
+{
+  "family": "soccer-physics-engine-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-execution",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-task",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "soccer-physics-engine-api",
+      "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/soccer-physics-engine:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp",
+          "name": "http-api"
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_CONFIG_PATH",
+          "value": "configs/default.yaml"
+        },
+        {
+          "name": "AWS_CONFIG_PATH",
+          "value": "configs/aws.yaml"
+        },
+        {
+          "name": "ENVIRONMENT",
+          "value": "prod"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/soccer-physics-engine",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "api"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')\" || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 20
+      }
+    }
+  ],
+  "tags": [
+    {
+      "key": "Project",
+      "value": "soccer-physics-engine"
+    },
+    {
+      "key": "Environment",
+      "value": "prod"
+    }
+  ]
+}
