@@ -1,3 +1,5 @@
 """Search package."""
 
-__all__: list[str] = []
+from src.search.similarity import compute_sequence_feature_vector, search_similar_sequences
+
+__all__ = ["compute_sequence_feature_vector", "search_similar_sequences"]
