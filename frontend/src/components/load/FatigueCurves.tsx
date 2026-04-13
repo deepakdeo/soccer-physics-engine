@@ -27,8 +27,8 @@ export function FatigueCurves({ fatigueCurves }: FatigueCurvesProps) {
   ).sort((left, right) => left - right);
 
   const chartData = windows.map((windowEnd) => {
-    const row: Record<string, number | string | null> = {
-      minute: `${windowEnd}m`,
+    const row: Record<string, number | null> = {
+      minute: windowEnd,
     };
 
     for (const playerId of playerIds) {
@@ -52,20 +52,44 @@ export function FatigueCurves({ fatigueCurves }: FatigueCurvesProps) {
       </CardHeader>
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
+          <LineChart data={chartData} margin={{ top: 8, right: 8, left: -4, bottom: 20 }}>
             <CartesianGrid stroke="rgba(17,34,29,0.08)" vertical={false} />
             <XAxis
               dataKey="minute"
+              type="number"
               tick={{ fill: "#5c6b64", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
+              tickFormatter={(value: number) => `${value}m`}
+              label={{
+                value: "Match minute",
+                position: "insideBottom",
+                offset: -12,
+                fill: "#5c6b64",
+                fontSize: 12,
+              }}
             />
             <YAxis
               tick={{ fill: "#5c6b64", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
+              tickFormatter={(value: number) => `${Math.round(value * 100)}%`}
+              width={72}
+              label={{
+                value: "HI workload share",
+                angle: -90,
+                position: "insideLeft",
+                fill: "#5c6b64",
+                fontSize: 12,
+                style: { textAnchor: "middle" },
+              }}
             />
-            <Tooltip />
+            <Tooltip
+              formatter={(value: number | string) =>
+                typeof value === "number" ? `${(value * 100).toFixed(1)}%` : value
+              }
+              labelFormatter={(value) => `Match minute ${value}`}
+            />
             <Legend />
             {playerIds.map((playerId, index) => (
               <Line
