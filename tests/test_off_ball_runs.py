@@ -77,6 +77,29 @@ def test_compute_player_heat_map_returns_density_grid() -> None:
     assert x_grid.shape == (10,)
     assert y_grid.shape == (8,)
     assert density.shape == (8, 10)
+    assert np.all(np.isfinite(density))
+    assert float(density.sum()) > 0.0
+
+
+def test_compute_player_heat_map_handles_singular_covariance() -> None:
+    positions = np.array(
+        [
+            [20.0, 20.0],
+            [22.0, 22.0],
+            [24.0, 24.0],
+            [26.0, 26.0],
+            [28.0, 28.0],
+            [30.0, 30.0],
+        ]
+    )
+
+    x_grid, y_grid, density = compute_player_heat_map(positions, grid_size=(12, 9))
+
+    assert x_grid.shape == (12,)
+    assert y_grid.shape == (9,)
+    assert density.shape == (9, 12)
+    assert np.all(np.isfinite(density))
+    assert float(density.sum()) > 0.0
 
 
 def test_build_pass_network_matrix_and_centrality() -> None:
