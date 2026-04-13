@@ -1,5 +1,17 @@
 export type TabKey = "match-analysis" | "load-monitor" | "player-intelligence";
 
+export interface MatchOption {
+  value: string;
+  label: string;
+}
+
+export interface PhaseWindow {
+  id: string;
+  phase: string;
+  startTimeS: number;
+  endTimeS: number;
+}
+
 export interface Recommendation {
   player_id: string;
   dx: number;

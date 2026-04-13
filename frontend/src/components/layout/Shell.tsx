@@ -3,7 +3,8 @@ import type { PropsWithChildren } from "react";
 import { Navigation } from "@/components/layout/Navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import type { HealthResponse, ModelInfoResponse, TabKey } from "@/types";
+import { Select } from "@/components/ui/select";
+import type { HealthResponse, MatchOption, ModelInfoResponse, TabKey } from "@/types";
 
 interface ShellProps {
   activeTab: TabKey;
@@ -12,6 +13,9 @@ interface ShellProps {
   error: string | null;
   health: HealthResponse;
   modelInfo: ModelInfoResponse;
+  matchOptions: MatchOption[];
+  selectedMatchId: string;
+  onMatchChange: (matchId: string) => void;
 }
 
 export function Shell({
@@ -22,6 +26,9 @@ export function Shell({
   error,
   health,
   modelInfo,
+  matchOptions,
+  selectedMatchId,
+  onMatchChange,
 }: PropsWithChildren<ShellProps>) {
   const showHero = activeTab === "match-analysis";
   const modelVersion = modelInfo.models[0]?.version ?? 1;
@@ -29,6 +36,34 @@ export function Shell({
   return (
     <div className="min-h-screen px-4 py-6 md:px-8">
       <div className="mx-auto max-w-[1480px] space-y-6">
+        <Card className="space-y-4 px-5 py-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted)]">
+                Match Selector
+              </p>
+              <p className="mt-1 text-lg font-semibold text-[var(--ink)]">
+                Switch the full dashboard context between demo matches.
+              </p>
+            </div>
+            <Select
+              value={selectedMatchId}
+              onChange={(event) => onMatchChange(event.target.value)}
+              options={matchOptions}
+              className="min-w-[220px]"
+            />
+          </div>
+          <details className="rounded-[22px] border border-[var(--line)] bg-white/60 px-4 py-4">
+            <summary className="cursor-pointer list-none text-sm font-semibold text-[var(--ink)]">
+              How to use this tool
+            </summary>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
+              <li>Select a match and time window to analyze tactical patterns</li>
+              <li>Switch to Load Monitor to check player physical status</li>
+              <li>Use Player Intelligence to compare movement profiles</li>
+            </ul>
+          </details>
+        </Card>
         <Card className="overflow-hidden p-0">
           <div
             className={

@@ -9,21 +9,32 @@ import { PossessionChains } from "@/components/tactical/PossessionChains";
 import { PressingReport } from "@/components/tactical/PressingReport";
 import { TransitionReport } from "@/components/tactical/TransitionReport";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatLabel, formatPercent } from "@/lib/utils";
-import type { DashboardData } from "@/types";
+import { formatLabel, formatPercent, formatTimeWindowLabel } from "@/lib/utils";
+import type { DashboardData, PhaseWindow } from "@/types";
 
 interface MatchAnalysisProps {
   data: DashboardData;
+  phaseWindows: PhaseWindow[];
+  activePhaseWindow: PhaseWindow;
   selectedWindow: number;
   onWindowChange: (value: number) => void;
+  onPhaseWindowChange: (window: PhaseWindow) => void;
 }
 
 export function MatchAnalysis({
   data,
+  phaseWindows,
+  activePhaseWindow,
   selectedWindow,
   onWindowChange,
+  onPhaseWindowChange,
 }: MatchAnalysisProps) {
   const focusPlayerId = data.analyzeSequence.load_snapshot.player_id;
+  const windowLabel = formatTimeWindowLabel(
+    activePhaseWindow.startTimeS,
+    activePhaseWindow.endTimeS,
+    activePhaseWindow.phase,
+  );
 
   return (
     <div className="space-y-6">
@@ -63,9 +74,15 @@ export function MatchAnalysis({
           overloads={data.pitchOverloads}
           teamShape={data.teamShapeOverlay}
           selectedPlayerId={focusPlayerId}
+          windowLabel={windowLabel}
         />
         <div className="space-y-6">
-          <TimelineScrubber value={selectedWindow} onChange={onWindowChange} />
+          <TimelineScrubber
+            value={selectedWindow}
+            activeWindow={activePhaseWindow}
+            range={phaseWindows}
+            onChange={onWindowChange}
+          />
           <InsightBox
             kicker="Sequence Insight"
             title={formatLabel(data.analyzeSequence.phase_classification)}
@@ -141,7 +158,12 @@ export function MatchAnalysis({
       </section>
 
       <section className="grid gap-6 xl:grid-cols-3">
-        <PhaseTimeline phases={data.matchReport.phase_summary} />
+        <PhaseTimeline
+          phases={data.matchReport.phase_summary}
+          windows={phaseWindows}
+          selectedWindowId={activePhaseWindow.id}
+          onSelectWindow={onPhaseWindowChange}
+        />
         <PressingReport report={data.matchReport.pressing_report} />
         <TransitionReport report={data.matchReport.transition_report} />
       </section>

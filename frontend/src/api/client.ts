@@ -1,12 +1,15 @@
 import {
-  demoAnalyzeSequence,
   demoHealth,
-  demoLoadReport,
-  demoMatchReport,
   demoModelInfo,
-  demoPlayerProfile,
-  demoSearchSequences,
 } from "@/data/demo";
+import {
+  DEFAULT_MATCH_ID,
+  getDemoAnalyzeSequence,
+  getDemoLoadReport,
+  getDemoMatchReport,
+  getDemoPlayerProfile,
+  getDemoSearchSequences,
+} from "@/data/demoScenarios";
 import type {
   AnalyzeSequenceResponse,
   HealthResponse,
@@ -76,18 +79,18 @@ export class SoccerPhysicsClient {
         method: "POST",
         body: JSON.stringify(payload),
       },
-      () => demoAnalyzeSequence,
+      () => getDemoAnalyzeSequence(payload.match_id, payload.end_time_s),
     );
   }
 
-  async getMatchReport(matchId: string): Promise<MatchReportResponse> {
+  async getMatchReport(matchId: string, referenceTimeS = 0): Promise<MatchReportResponse> {
     return fetchJson(
       "/match-report",
       {
         method: "POST",
         body: JSON.stringify({ dataset: "metrica", match_id: matchId }),
       },
-      () => demoMatchReport,
+      () => getDemoMatchReport(matchId, referenceTimeS),
     );
   }
 
@@ -98,7 +101,7 @@ export class SoccerPhysicsClient {
         method: "POST",
         body: JSON.stringify(payload),
       },
-      () => demoLoadReport,
+      () => getDemoLoadReport(payload.match_id),
     );
   }
 
@@ -109,17 +112,17 @@ export class SoccerPhysicsClient {
         method: "POST",
         body: JSON.stringify(payload),
       },
-      () => demoSearchSequences,
+      () => getDemoSearchSequences(payload.match_id, payload.reference_time_s),
     );
   }
 
-  async getPlayerProfile(playerId: string): Promise<PlayerProfileResponse> {
+  async getPlayerProfile(playerId: string, matchId = DEFAULT_MATCH_ID): Promise<PlayerProfileResponse> {
     return fetchJson(
-      `/player-profile/${playerId}`,
+      `/player-profile/${playerId}?match_id=${matchId}`,
       {
         method: "GET",
       },
-      () => demoPlayerProfile,
+      () => getDemoPlayerProfile(matchId, playerId),
     );
   }
 

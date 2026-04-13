@@ -27,6 +27,7 @@ interface PitchCanvasProps {
   overloads: PitchZone[];
   teamShape: TeamShapeOverlay;
   selectedPlayerId?: string;
+  windowLabel: string;
 }
 
 export function PitchCanvas({
@@ -37,6 +38,7 @@ export function PitchCanvas({
   overloads,
   teamShape,
   selectedPlayerId,
+  windowLabel,
 }: PitchCanvasProps) {
   const xScale = scaleLinear<number>()
     .domain([0, 105])
@@ -73,7 +75,10 @@ export function PitchCanvas({
           </span>
         </div>
       </CardHeader>
-      <div className="p-4 md:p-6">
+      <div className="relative p-4 md:p-6">
+        <div className="absolute left-8 top-8 z-10 rounded-full border border-white/25 bg-[rgba(10,31,22,0.72)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+          {windowLabel}
+        </div>
         <svg
           viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
           className="aspect-[4/3] w-full rounded-[26px]"

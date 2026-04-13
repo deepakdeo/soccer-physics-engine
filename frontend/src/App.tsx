@@ -13,10 +13,16 @@ export default function App() {
     data,
     loading,
     error,
+    matchOptions,
+    phaseWindows,
+    activePhaseWindow,
+    selectedMatchId,
+    setSelectedMatchId,
     selectedPlayerId,
     setSelectedPlayerId,
     selectedWindow,
     setSelectedWindow,
+    setSelectedPhaseWindow,
   } = useDashboardData();
 
   return (
@@ -27,12 +33,18 @@ export default function App() {
       error={error}
       health={data.health}
       modelInfo={data.modelInfo}
+      matchOptions={matchOptions}
+      selectedMatchId={selectedMatchId}
+      onMatchChange={setSelectedMatchId}
     >
       {activeTab === "match-analysis" ? (
         <MatchAnalysis
           data={data}
+          phaseWindows={phaseWindows}
+          activePhaseWindow={activePhaseWindow}
           selectedWindow={selectedWindow}
           onWindowChange={setSelectedWindow}
+          onPhaseWindowChange={setSelectedPhaseWindow}
         />
       ) : null}
       {activeTab === "load-monitor" ? <LoadMonitor data={data} /> : null}
