@@ -1,3 +1,5 @@
+DOCKER_IMAGE ?= spe:latest
+
 dev:
 	uv sync --extra dev
 
@@ -17,7 +19,7 @@ run-api:
 	uv run python -m uvicorn src.api.main:app --reload
 
 docker-build:
-	docker build -t spe:latest .
+	docker build -t $(DOCKER_IMAGE) .
 
 docker-run:
-	docker run -p 8000:8000 spe:latest
+	docker run --rm -p 8000:8000 $(DOCKER_IMAGE)
