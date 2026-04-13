@@ -1,0 +1,6 @@
+aws:
+  region: us-east-1
+  ecr_repository: your-ecr-repository
+  ecs_cluster: your-ecs-cluster
+  ecs_service: your-ecs-service
+  api_gateway_id: your-api-gateway-id

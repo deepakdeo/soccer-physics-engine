@@ -1,0 +1,13 @@
+app_name: soccer-physics-engine
+paths:
+  data_root: data
+  raw_tracking_root: data/raw/metrica
+  processed_root: data/processed
+thresholds:
+  high_intensity_threshold_ms: 5.5
+  sharp_decel_threshold_ms2: -3.0
+  smoothing_window: 7
+  smoothing_polyorder: 2
+aws:
+  region: us-east-1
+  s3_bucket: soccer-physics-engine-artifacts

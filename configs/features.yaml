@@ -1,0 +1,5 @@
+weights:
+  pitch_control: 0.3
+  passing_lanes: 0.25
+  support_distance: 0.2
+  pressure: 0.25

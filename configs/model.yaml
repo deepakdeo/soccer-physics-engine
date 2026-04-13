@@ -1,0 +1,3 @@
+model:
+  registry_uri: file:./mlruns
+  experiment_name: soccer-physics-engine
