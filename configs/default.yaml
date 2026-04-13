@@ -26,10 +26,10 @@ aws:
   s3_bucket_arn: arn:aws:s3:::soccer-physics-engine-artifacts
   ecr_repository_name: soccer-physics-engine
   ecr_repository_arn: arn:aws:ecr:us-east-1:123456789012:repository/soccer-physics-engine
-  ecs_cluster_name: soccer-physics-engine-cluster
-  ecs_cluster_arn: arn:aws:ecs:us-east-1:123456789012:cluster/soccer-physics-engine-cluster
-  ecs_service_name: soccer-physics-engine-service
-  ecs_service_arn: arn:aws:ecs:us-east-1:123456789012:service/soccer-physics-engine-cluster/soccer-physics-engine-service
+  ecs_cluster_name: soccer-physics-engine
+  ecs_cluster_arn: arn:aws:ecs:us-east-1:123456789012:cluster/soccer-physics-engine
+  ecs_service_name: spe-api
+  ecs_service_arn: arn:aws:ecs:us-east-1:123456789012:service/soccer-physics-engine/spe-api
   ecs_task_definition_family: soccer-physics-engine-api
   ecs_task_execution_role_arn: arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-execution
   ecs_task_role_arn: arn:aws:iam::123456789012:role/soccer-physics-engine-ecs-task

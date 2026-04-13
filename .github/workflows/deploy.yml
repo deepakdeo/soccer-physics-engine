@@ -13,8 +13,8 @@ permissions:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: soccer-physics-engine
-  ECS_CLUSTER: soccer-physics-engine-cluster
-  ECS_SERVICE: soccer-physics-engine-service
+  ECS_CLUSTER: soccer-physics-engine
+  ECS_SERVICE: spe-api
   ECS_TASK_FAMILY: soccer-physics-engine-api
   CONTAINER_NAME: soccer-physics-engine-api
   TASK_DEFINITION_PATH: infra/ecs-task-definition.json
