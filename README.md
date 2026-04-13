@@ -4,7 +4,7 @@ A physics-based soccer analytics platform that extracts tactical intelligence, b
 
 **Status:** Under active development.
 
-Built to demonstrate the full scope of the U.S. Soccer Data Scientist role — tactical analysis, performance monitoring, and movement modeling — from a single physics-first pipeline.
+The goal is to turn tracking data into practical tactical and performance insights through a shared physics-first pipeline.
 
 ## Tech Stack
 Python · NumPy · SciPy · PyTorch · FastAPI · Docker · AWS · React · D3.js
