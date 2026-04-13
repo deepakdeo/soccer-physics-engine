@@ -48,7 +48,7 @@ packages = ["src"]
 testpaths = ["tests"]
 
 [tool.uv]
-package = false
+package = true
 
 [tool.ruff]
 line-length = 100
