@@ -45,6 +45,11 @@ interface LoadReportPayload {
   player_id?: string;
 }
 
+interface LiveResponse<T> {
+  data: T;
+  isLive: boolean;
+}
+
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
@@ -68,6 +73,34 @@ async function fetchJson<T>(
   } catch {
     await delay(120);
     return fallback();
+  }
+}
+
+async function fetchJsonWithSource<T>(
+  path: string,
+  init: RequestInit,
+  fallback: () => T,
+): Promise<LiveResponse<T>> {
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      ...init,
+    });
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+    return {
+      data: (await response.json()) as T,
+      isLive: true,
+    };
+  } catch {
+    await delay(120);
+    return {
+      data: fallback(),
+      isLive: false,
+    };
   }
 }
 
@@ -128,6 +161,16 @@ export class SoccerPhysicsClient {
 
   async getHealth(): Promise<HealthResponse> {
     return fetchJson(
+      "/health",
+      {
+        method: "GET",
+      },
+      () => demoHealth,
+    );
+  }
+
+  async getHealthStatus(): Promise<LiveResponse<HealthResponse>> {
+    return fetchJsonWithSource(
       "/health",
       {
         method: "GET",

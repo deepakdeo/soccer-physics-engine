@@ -11,6 +11,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>("match-analysis");
   const {
     data,
+    isLiveData,
     loading,
     error,
     matchOptions,
@@ -29,6 +30,7 @@ export default function App() {
     <Shell
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      isLiveData={isLiveData}
       loading={loading}
       error={error}
       matchOptions={matchOptions}

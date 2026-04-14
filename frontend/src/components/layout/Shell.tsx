@@ -9,6 +9,7 @@ import type { MatchOption, TabKey } from "@/types";
 interface ShellProps {
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
+  isLiveData: boolean;
   loading: boolean;
   error: string | null;
   matchOptions: MatchOption[];
@@ -20,6 +21,7 @@ export function Shell({
   children,
   activeTab,
   onTabChange,
+  isLiveData,
   loading,
   error,
   matchOptions,
@@ -36,7 +38,9 @@ export function Shell({
                 <h1 className="section-title text-2xl font-semibold md:text-3xl">
                   Soccer Physics Engine
                 </h1>
-                <Badge tone="neutral">v1.0.0 | Demo data</Badge>
+                <Badge tone={isLiveData ? "success" : "neutral"}>
+                  {isLiveData ? "v1.0.0 | Live" : "v1.0.0 | Demo data"}
+                </Badge>
                 {loading ? <Badge tone="warning">Refreshing</Badge> : null}
                 {error ? <Badge tone="danger">Fallback active</Badge> : null}
               </div>

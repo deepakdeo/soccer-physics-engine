@@ -16,6 +16,7 @@ import type { DashboardData, PhaseWindow } from "@/types";
 
 interface DashboardState {
   data: DashboardData;
+  isLiveData: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -29,6 +30,7 @@ export function useDashboardData() {
   const [selectedWindow, setSelectedWindow] = useState(getDefaultReferenceTime(DEFAULT_MATCH_ID));
   const [state, setState] = useState<DashboardState>({
     data: demoDashboardData,
+    isLiveData: false,
     loading: true,
     error: null,
   });
@@ -49,10 +51,11 @@ export function useDashboardData() {
     });
 
     async function loadDashboard(): Promise<void> {
+      const healthStatus = await soccerPhysicsClient.getHealthStatus();
+
       try {
-        const [health, modelInfo, matchReport, loadReport, searchSequences] =
+        const [modelInfo, matchReport, loadReport, searchSequences] =
           await Promise.all([
-            soccerPhysicsClient.getHealth(),
             soccerPhysicsClient.getModelInfo(),
             soccerPhysicsClient.getMatchReport(selectedMatchId, activePhaseWindow.endTimeS),
             soccerPhysicsClient.getLoadReport({
@@ -108,9 +111,10 @@ export function useDashboardData() {
           setState({
             loading: false,
             error: null,
+            isLiveData: healthStatus.isLive,
             data: {
               ...demoSnapshot,
-              health,
+              health: healthStatus.data,
               modelInfo,
               analyzeSequence,
               matchReport: {
@@ -135,6 +139,7 @@ export function useDashboardData() {
           setState({
             loading: false,
             error: message,
+            isLiveData: healthStatus.isLive,
             data: demoSnapshot,
           });
         });
