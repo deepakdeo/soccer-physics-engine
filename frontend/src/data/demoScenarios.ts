@@ -763,7 +763,7 @@ function buildMatchReport(
 const sampleGameOneBlueprint: MatchBlueprint = {
   id: "sample_game_1",
   label: "Sample Game 1",
-  defaultPlayerId: "home_11",
+  defaultPlayerId: "home_2",
   defaultWindowId: "transition",
   phaseSummary: {
     build_up: 21,
@@ -1195,7 +1195,7 @@ const sampleGameOneBlueprint: MatchBlueprint = {
 const sampleGameTwoBlueprint: MatchBlueprint = {
   id: "sample_game_2",
   label: "Sample Game 2",
-  defaultPlayerId: "home_10",
+  defaultPlayerId: "home_2",
   defaultWindowId: "chance_creation",
   phaseSummary: {
     build_up: 18,

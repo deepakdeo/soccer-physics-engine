@@ -9,6 +9,7 @@ import {
   getDefaultPlayerId,
   getDefaultReferenceTime,
   getDemoDashboardData,
+  getDemoPlayerProfile,
   getDemoPhaseWindows,
 } from "@/data/demoScenarios";
 import type { DashboardData, PhaseWindow } from "@/types";
@@ -21,7 +22,10 @@ interface DashboardState {
 
 export function useDashboardData() {
   const [selectedMatchId, setSelectedMatchId] = useState(DEFAULT_MATCH_ID);
-  const [selectedPlayerId, setSelectedPlayerId] = useState(getDefaultPlayerId(DEFAULT_MATCH_ID));
+  const [selectedPlayerId, setSelectedPlayerIdState] = useState(
+    getDefaultPlayerId(DEFAULT_MATCH_ID),
+  );
+  const [hasExplicitPlayerSelection, setHasExplicitPlayerSelection] = useState(false);
   const [selectedWindow, setSelectedWindow] = useState(getDefaultReferenceTime(DEFAULT_MATCH_ID));
   const [state, setState] = useState<DashboardState>({
     data: demoDashboardData,
@@ -46,19 +50,10 @@ export function useDashboardData() {
 
     async function loadDashboard(): Promise<void> {
       try {
-        const [health, modelInfo, analyzeSequence, matchReport, loadReport, searchSequences, playerProfile] =
+        const [health, modelInfo, matchReport, loadReport, searchSequences] =
           await Promise.all([
             soccerPhysicsClient.getHealth(),
             soccerPhysicsClient.getModelInfo(),
-            soccerPhysicsClient.analyzeSequence({
-              dataset: "metrica",
-              match_id: selectedMatchId,
-              start_time_s: activePhaseWindow.startTimeS,
-              end_time_s: activePhaseWindow.endTimeS,
-              focus_team: "home",
-              focus_player_id: selectedPlayerId,
-              mode: "single",
-            }),
             soccerPhysicsClient.getMatchReport(selectedMatchId, activePhaseWindow.endTimeS),
             soccerPhysicsClient.getLoadReport({
               dataset: "metrica",
@@ -70,14 +65,46 @@ export function useDashboardData() {
               reference_time_s: activePhaseWindow.endTimeS,
               similarity_threshold: 0.75,
             }),
-            soccerPhysicsClient.getPlayerProfile(selectedPlayerId, selectedMatchId),
           ]);
+
+        const livePlayerIds = loadReport.player_load_profiles.map((profile) => profile.player_id);
+        const selectedPlayerIsAvailable = livePlayerIds.includes(selectedPlayerId);
+        const resolvedPlayerId = selectedPlayerIsAvailable
+          ? selectedPlayerId
+          : livePlayerIds[0] ?? selectedPlayerId;
+
+        const analyzeSequence = await soccerPhysicsClient.analyzeSequence({
+          dataset: "metrica",
+          match_id: selectedMatchId,
+          start_time_s: activePhaseWindow.startTimeS,
+          end_time_s: activePhaseWindow.endTimeS,
+          focus_team: "home",
+          focus_player_id:
+            hasExplicitPlayerSelection && selectedPlayerIsAvailable
+              ? selectedPlayerId
+              : undefined,
+          mode: "single",
+        });
+
+        let playerProfile = getDemoPlayerProfile(selectedMatchId, resolvedPlayerId);
+        try {
+          playerProfile = await soccerPhysicsClient.getPlayerProfile(
+            resolvedPlayerId,
+            selectedMatchId,
+          );
+        } catch {
+          playerProfile = getDemoPlayerProfile(selectedMatchId, resolvedPlayerId);
+        }
 
         if (isCancelled) {
           return;
         }
 
         startTransition(() => {
+          if (!hasExplicitPlayerSelection && resolvedPlayerId !== selectedPlayerId) {
+            setSelectedPlayerIdState(resolvedPlayerId);
+          }
+
           setState({
             loading: false,
             error: null,
@@ -118,13 +145,25 @@ export function useDashboardData() {
     return () => {
       isCancelled = true;
     };
-  }, [activePhaseWindow.endTimeS, activePhaseWindow.startTimeS, selectedMatchId, selectedPlayerId]);
+  }, [
+    activePhaseWindow.endTimeS,
+    activePhaseWindow.startTimeS,
+    hasExplicitPlayerSelection,
+    selectedMatchId,
+    selectedPlayerId,
+  ]);
 
   function handleMatchChange(matchId: string): void {
     const nextWindow = getDefaultReferenceTime(matchId);
     setSelectedMatchId(matchId);
-    setSelectedPlayerId(getDefaultPlayerId(matchId));
+    setSelectedPlayerIdState(getDefaultPlayerId(matchId));
+    setHasExplicitPlayerSelection(false);
     setSelectedWindow(nextWindow);
+  }
+
+  function handlePlayerChange(playerId: string): void {
+    setSelectedPlayerIdState(playerId);
+    setHasExplicitPlayerSelection(true);
   }
 
   function handleWindowChange(value: number): void {
@@ -143,7 +182,7 @@ export function useDashboardData() {
     selectedMatchId,
     setSelectedMatchId: handleMatchChange,
     selectedPlayerId,
-    setSelectedPlayerId,
+    setSelectedPlayerId: handlePlayerChange,
     selectedWindow,
     setSelectedWindow: handleWindowChange,
     setSelectedPhaseWindow: handlePhaseWindowChange,
