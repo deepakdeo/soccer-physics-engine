@@ -31,8 +31,6 @@ export default function App() {
       onTabChange={setActiveTab}
       loading={loading}
       error={error}
-      health={data.health}
-      modelInfo={data.modelInfo}
       matchOptions={matchOptions}
       selectedMatchId={selectedMatchId}
       onMatchChange={setSelectedMatchId}

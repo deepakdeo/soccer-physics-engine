@@ -46,15 +46,21 @@ export function PlayerIntelligence({
 
   return (
     <div className="space-y-6">
+      <section className="rounded-[24px] border border-[var(--line)] bg-white/70 px-5 py-4">
+        <p className="text-sm text-[var(--muted)]">
+          Movement profiles — role, efficiency, off-ball value, run types.
+        </p>
+      </section>
+
       <section className="rounded-[28px] border border-[var(--line)] bg-white/65 px-5 py-5">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted)]">
-              Player Lens
+              Player Selection
             </p>
-            <h2 className="section-title mt-2 text-3xl font-semibold">
-              Compare role, movement efficiency, and off-ball value.
-            </h2>
+            <p className="mt-2 text-sm text-[var(--muted)]">
+              Choose a player to compare movement profile outputs against the current match cohort.
+            </p>
           </div>
           <Select
             value={selectedPlayerId}

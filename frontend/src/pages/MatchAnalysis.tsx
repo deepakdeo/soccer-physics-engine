@@ -38,6 +38,12 @@ export function MatchAnalysis({
 
   return (
     <div className="space-y-6">
+      <section className="rounded-[24px] border border-[var(--line)] bg-white/70 px-5 py-4">
+        <p className="text-sm text-[var(--muted)]">
+          Tactical breakdown of the selected sequence — pitch state, recommendations, phases, pressing.
+        </p>
+      </section>
+
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="State Score"
