@@ -10,7 +10,7 @@ import { PressingReport } from "@/components/tactical/PressingReport";
 import { TransitionReport } from "@/components/tactical/TransitionReport";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatLabel, formatPercent, formatTimeWindowLabel } from "@/lib/utils";
-import type { DashboardData, PhaseWindow } from "@/types";
+import type { DashboardData, PhaseWindow, Recommendation } from "@/types";
 
 interface MatchAnalysisProps {
   data: DashboardData;
@@ -19,6 +19,42 @@ interface MatchAnalysisProps {
   selectedWindow: number;
   onWindowChange: (value: number) => void;
   onPhaseWindowChange: (window: PhaseWindow) => void;
+}
+
+function formatMovementCue(recommendation: Recommendation): string {
+  const movementParts: string[] = [];
+
+  if (Math.abs(recommendation.dx) >= 1) {
+    movementParts.push(
+      recommendation.dx > 0
+        ? `step about ${Math.abs(recommendation.dx).toFixed(0)} meters higher`
+        : `drop about ${Math.abs(recommendation.dx).toFixed(0)} meters deeper`,
+    );
+  }
+
+  if (Math.abs(recommendation.dy) >= 1) {
+    movementParts.push(
+      `shift about ${Math.abs(recommendation.dy).toFixed(0)} meters toward the ${
+        recommendation.dy > 0 ? "right" : "left"
+      } side`,
+    );
+  }
+
+  if (movementParts.length === 0) {
+    return "make a small positional adjustment";
+  }
+
+  if (movementParts.length === 1) {
+    return movementParts[0];
+  }
+
+  return `${movementParts[0]} and ${movementParts[1]}`;
+}
+
+function buildCoachRecommendation(recommendation: Recommendation): string {
+  return `Suggestion for ${formatLabel(recommendation.player_id)}: ${formatMovementCue(
+    recommendation,
+  )}. Why? ${recommendation.explanation}`;
 }
 
 export function MatchAnalysis({
@@ -44,29 +80,40 @@ export function MatchAnalysis({
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <MetricCard
           label="State Score"
           value={formatPercent(data.analyzeSequence.state_score, 0)}
           helper="Unified tactical state score for the selected sequence."
+          tooltip="How favorable is this moment for the team? 100% = completely dominant, 0% = completely under pressure. Based on pitch control, passing options, and support shape."
           tone="accent"
         />
         <MetricCard
           label="Pitch Control"
           value={formatPercent(data.analyzeSequence.pitch_control, 0)}
           helper="Home team territorial control estimate."
+          tooltip="What percentage of the pitch can the home team reach before the opponent? Think of it as territorial dominance — like a heat map of who owns which space."
           tone="success"
         />
         <MetricCard
           label="Predicted Gain"
           value={`+${formatPercent(data.analyzeSequence.predicted_improvement, 0)}`}
           helper="Expected improvement from the best recommendation."
+          tooltip="If the recommended player movement is made, how much would the state score improve? +5% means the team's tactical situation gets moderately better."
           tone="warning"
         />
         <MetricCard
           label="Phase Class"
           value={formatLabel(data.analyzeSequence.phase_classification)}
-          helper={`Confidence ${formatPercent(data.analyzeSequence.confidence, 0)}.`}
+          helper="Current tactical phase for the selected sequence."
+          tooltip="What type of tactical moment is this? Build Up = playing from the back. Progression = moving up the pitch. Chance Creation = creating a shooting opportunity. Pressing = trying to win the ball back. Transition = switching between attack and defense."
+          tone="neutral"
+        />
+        <MetricCard
+          label="Confidence"
+          value={formatPercent(data.analyzeSequence.confidence, 0)}
+          helper="Model certainty for the top recommendation."
+          tooltip="How reliable is this recommendation? Higher = the model is more certain this movement would help."
           tone="neutral"
         />
       </section>
@@ -123,8 +170,15 @@ export function MatchAnalysis({
                       {formatPercent(recommendation.confidence, 0)}
                     </p>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                    {recommendation.explanation}
+                  <p className="mt-3 text-sm font-medium leading-6 text-[var(--ink)]">
+                    {buildCoachRecommendation(recommendation)}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    Model note: {recommendation.explanation}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    Predicted gain {formatPercent(recommendation.improvement, 0)} with{" "}
+                    {formatPercent(recommendation.confidence, 0)} confidence.
                   </p>
                 </div>
               ))}

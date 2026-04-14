@@ -56,7 +56,7 @@ export function Shell({
                 value={selectedMatchId}
                 onChange={(event) => onMatchChange(event.target.value)}
                 options={matchOptions}
-                className="min-w-[220px]"
+                className="w-full min-w-[280px] max-w-[560px] lg:min-w-[420px]"
               />
             </div>
           </div>
@@ -65,10 +65,29 @@ export function Shell({
             <summary className="cursor-pointer list-none text-sm font-semibold text-[var(--ink)]">
               How to use this tool
             </summary>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
-              <li>Select a match and time window to analyze tactical patterns</li>
-              <li>Switch to Load Monitor to check player physical status</li>
-              <li>Use Player Intelligence to compare movement profiles</li>
+            <div className="mt-3 space-y-3 text-sm leading-6 text-[var(--muted)]">
+              <p>
+                This tool analyzes real player tracking data — the position of every player on
+                the pitch, captured 25 times per second by stadium cameras.
+              </p>
+              <p>
+                <span className="font-semibold text-[var(--ink)]">What you&apos;re seeing:</span>{" "}
+                Two sample matches from Metrica Sports with anonymized players. The data is real
+                match footage — real movements, real tactics — but team and player names are
+                hidden.
+              </p>
+              <p>
+                <span className="font-semibold text-[var(--ink)]">How a club would use this:</span>{" "}
+                Connect your own tracking data from Second Spectrum, Hawkeye, or Stats Perform and
+                see your actual players, matches, and tactical patterns analyzed automatically.
+              </p>
+            </div>
+            <p className="mt-3 text-sm font-semibold text-[var(--ink)]">Try it now:</p>
+            <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
+              <li>Use the timeline slider to scrub through the match</li>
+              <li>Switch between Match Analysis, Load Monitor, and Player Intelligence tabs</li>
+              <li>Read the Recommendations panel for suggested tactical adjustments</li>
+              <li>Check the Load Monitor to see which players are under physical strain</li>
             </ul>
           </details>
         </Card>

@@ -138,8 +138,14 @@ interface MatchScenario {
 const MATCH_SCENARIO_ORDER: string[] = ["sample_game_1", "sample_game_2"];
 
 export const MATCH_OPTIONS: MatchOption[] = [
-  { value: "sample_game_1", label: "Sample Game 1" },
-  { value: "sample_game_2", label: "Sample Game 2" },
+  {
+    value: "sample_game_1",
+    label: "Sample Match 1 (anonymized tracking data — 22 players, 90 minutes, 25fps)",
+  },
+  {
+    value: "sample_game_2",
+    label: "Sample Match 2 (anonymized tracking data — 22 players, 90 minutes, 25fps)",
+  },
 ];
 
 export const DEFAULT_MATCH_ID = "sample_game_1";
@@ -762,7 +768,7 @@ function buildMatchReport(
 
 const sampleGameOneBlueprint: MatchBlueprint = {
   id: "sample_game_1",
-  label: "Sample Game 1",
+  label: "Sample Match 1",
   defaultPlayerId: "home_2",
   defaultWindowId: "transition",
   phaseSummary: {
@@ -1194,7 +1200,7 @@ const sampleGameOneBlueprint: MatchBlueprint = {
 
 const sampleGameTwoBlueprint: MatchBlueprint = {
   id: "sample_game_2",
-  label: "Sample Game 2",
+  label: "Sample Match 2",
   defaultPlayerId: "home_2",
   defaultWindowId: "chance_creation",
   phaseSummary: {

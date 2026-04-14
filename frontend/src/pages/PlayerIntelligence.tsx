@@ -48,7 +48,8 @@ export function PlayerIntelligence({
     <div className="space-y-6">
       <section className="rounded-[24px] border border-[var(--line)] bg-white/70 px-5 py-4">
         <p className="text-sm text-[var(--muted)]">
-          Movement profiles — role, efficiency, off-ball value, run types.
+          This compares players by how they create value through movement — not just goals and
+          assists, but smart positioning, space creation, and efficient movement patterns.
         </p>
       </section>
 

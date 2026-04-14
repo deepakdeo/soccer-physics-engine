@@ -26,7 +26,9 @@ export function LoadMonitor({ data }: LoadMonitorProps) {
     <div className="space-y-6">
       <section className="rounded-[24px] border border-[var(--line)] bg-white/70 px-5 py-4">
         <p className="text-sm text-[var(--muted)]">
-          Biomechanical load status — workload proxies and monitoring flags.
+          This tracks how hard each player is working during the match. Players flagged as
+          MONITOR or FLAGGED have accumulated more physical stress than usual — consider them
+          for substitution or reduced intensity.
         </p>
       </section>
 
