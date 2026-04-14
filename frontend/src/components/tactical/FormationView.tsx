@@ -72,9 +72,6 @@ export function FormationView({
           ))}
         </div>
       </div>
-      <p className="mt-4 text-sm text-[var(--muted)]">
-        Sample data uses reduced squad size.
-      </p>
     </Card>
   );
 }
