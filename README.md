@@ -84,9 +84,6 @@ AWS ECS      Vercel
 
 ## Screenshots
 
-![Match Analysis](assets/demo_screenshots/match_analysis.png)
-*Match Analysis — pitch state with tactical overlays*
-
 ![Pass Network](assets/demo_screenshots/pass_network.png)
 *Pass Network — passing connections for both teams with probability labels*
 
