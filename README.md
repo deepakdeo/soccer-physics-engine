@@ -1,4 +1,11 @@
+![CI](https://github.com/deepakdeo/soccer-physics-engine/actions/workflows/ci.yml/badge.svg)
+![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Deployed on AWS](https://img.shields.io/badge/deployed-AWS%20ECS%20Fargate-orange.svg)
+
 ## Soccer Physics Engine
+
+**[Live Dashboard](https://soccer-physics-engine.vercel.app)** · **[User Guide](USER_GUIDE.md)** · **[API Docs](#api-endpoints)**
 
 A decision-support tool for soccer analysts, coaches, and performance staff. Takes player tracking data and produces tactical analysis, physical load monitoring, and player movement intelligence.
 
@@ -33,9 +40,49 @@ Identifies which players create value through movement, not just ball touches.
 - Movement efficiency: tactical value relative to biomechanical cost (experimental metric)
 - Role detection from movement patterns
 
+## Architecture
+
+```text
+Tracking Data (Metrica CSV, 25fps)
+│
+▼
+┌─────────────────┐
+│  Kloppy Loader   │  Data ingestion + validation
+└────────┬─────────┘
+│
+▼
+┌─────────────────┐
+│  Physics Engine   │  Kinematics, pitch control, spatial analysis
+└────────┬─────────┘
+│
+┌─────┼──────┬──────────┐
+▼     ▼      ▼          ▼
+Tactical  Load   Player    Graph
+Analysis  Monitor Intel    Model
+│     │      │          │
+└─────┼──────┴──────────┘
+│
+▼
+┌─────────────────┐
+│   FastAPI + ML    │  State scoring, recommendations
+└────────┬─────────┘
+│
+▼
+┌─────────────────┐
+│     Docker        │  Containerized service
+└────────┬─────────┘
+│
+┌─────┴──────┐
+▼            ▼
+AWS ECS      Vercel
+(API)      (Dashboard)
+```
+
 ## Screenshots
 
-[placeholder for match_analysis.png, load_monitor.png, player_intelligence.png]
+![Match Analysis](assets/demo_screenshots/match_analysis.png)
+![Load Monitor](assets/demo_screenshots/load_monitor.png)
+![Player Intelligence](assets/demo_screenshots/player_intelligence.png)
 
 ## Quick start
 
@@ -105,12 +152,31 @@ The API returns JSON with:
 
 ## Tech stack
 
-Python, NumPy, SciPy, scikit-learn, PyTorch, NetworkX, FastAPI, Docker, AWS (ECS Fargate, ECR, API Gateway, CloudWatch), React, TypeScript, Tailwind CSS, D3.js
+| Layer | Technologies |
+|-------|-------------|
+| Physics engine | Python, NumPy, SciPy |
+| ML / Graphs | scikit-learn, PyTorch, NetworkX |
+| API | FastAPI, Pydantic, Uvicorn |
+| Frontend | React, TypeScript, Tailwind CSS, D3.js |
+| Infrastructure | Docker, AWS ECS Fargate, ECR, API Gateway, CloudWatch |
+| Quality | pytest (108 tests), ruff, mypy, GitHub Actions CI/CD |
 
 ## Data
 
 Built on Metrica Sports open tracking data (2 sample matches, 25fps, 22 players + ball). StatsBomb open event data available for enrichment.
 
+## Documentation
+
+- **[User Guide](USER_GUIDE.md)** — step-by-step walkthrough for coaches and analysts
+- **[Build Plan](BUILD_PLAN.md)** — complete technical specification and build phases
+- **[Architecture](infra/architecture.md)** — AWS deployment architecture
+
 ## Status
 
-v1.0.0 — functional analytics engine running on sample data. The system is designed to work with any tracking data provider through the Kloppy abstraction layer.
+v1.0.0 — 42 analytical features, 108 tests passing, deployed on AWS ECS Fargate with React dashboard on Vercel. Built on Metrica Sports open tracking data (2 anonymized matches, 25fps, 22 players + ball). Designed to work with any tracking data provider through the Kloppy abstraction layer.
+
+## Acknowledgments
+
+- [Metrica Sports](https://github.com/metrica-sports/sample-data) for open tracking data
+- [StatsBomb](https://github.com/statsbomb/open-data) for open event data
+- [Kloppy](https://kloppy.pysport.org/) for standardized data loading
