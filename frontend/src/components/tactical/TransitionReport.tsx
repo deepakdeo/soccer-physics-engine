@@ -24,12 +24,14 @@ export function TransitionReport({ report }: TransitionReportProps) {
           label="Transition Speed"
           value={`${transitionSpeed.toFixed(1)}s`}
           helper="Lower is faster progression to a threatening state."
+          tooltip="How quickly the team turns a regain or loose-ball win into an attacking advantage. Lower times usually mean the first forward action happens immediately."
           tone="accent"
         />
         <MetricCard
           label="Shape Recovery"
           value={`${recoverySpeed.toFixed(1)}s`}
           helper="Lower is faster defensive restabilization after loss."
+          tooltip="How quickly the team regains compact defensive spacing after losing the ball. Lower times suggest stronger recovery runs and better rest defense."
           tone="warning"
         />
       </div>

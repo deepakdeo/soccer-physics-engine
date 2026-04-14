@@ -12,7 +12,7 @@ export function InfoTooltip({ content }: InfoTooltipProps) {
       >
         ?
       </button>
-      <div className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 hidden w-72 -translate-x-1/2 rounded-[18px] border border-[var(--line)] bg-[rgba(10,31,22,0.94)] px-3 py-3 text-left text-xs leading-5 text-white shadow-[0_18px_40px_rgba(10,31,22,0.2)] group-hover:block group-focus-within:block">
+      <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-3 hidden w-72 -translate-x-1/2 rounded-[18px] border border-[var(--line)] bg-[rgba(10,31,22,0.94)] px-3 py-3 text-left text-xs leading-5 text-white shadow-[0_18px_40px_rgba(10,31,22,0.2)] group-hover:block group-focus-within:block">
         {content}
       </div>
     </div>

@@ -33,7 +33,7 @@ export function Shell({
       <div className="mx-auto max-w-[1480px] space-y-6">
         <Card className="space-y-4 px-5 py-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div>
+            <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="section-title text-2xl font-semibold md:text-3xl">
                   Soccer Physics Engine
@@ -44,8 +44,9 @@ export function Shell({
                 {loading ? <Badge tone="warning">Refreshing</Badge> : null}
                 {error ? <Badge tone="danger">Fallback active</Badge> : null}
               </div>
-              <p className="mt-2 text-sm text-[var(--muted)]">
-                Match-based decision support for tactical analysis, physical load monitoring, and player movement intelligence.
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
+                Decision support for tactical analysis, load monitoring, and player movement
+                insights.
               </p>
             </div>
             <div className="space-y-2">

@@ -84,35 +84,35 @@ export function MatchAnalysis({
         <MetricCard
           label="State Score"
           value={formatPercent(data.analyzeSequence.state_score, 0)}
-          helper="Unified tactical state score for the selected sequence."
+          helper="Quick summary of how strong this moment is for the team."
           tooltip="How favorable is this moment for the team? 100% = completely dominant, 0% = completely under pressure. Based on pitch control, passing options, and support shape."
           tone="accent"
         />
         <MetricCard
           label="Pitch Control"
           value={formatPercent(data.analyzeSequence.pitch_control, 0)}
-          helper="Home team territorial control estimate."
+          helper="Shows the home side's territorial edge in this frame."
           tooltip="What percentage of the pitch can the home team reach before the opponent? Think of it as territorial dominance — like a heat map of who owns which space."
           tone="success"
         />
         <MetricCard
           label="Predicted Gain"
           value={`+${formatPercent(data.analyzeSequence.predicted_improvement, 0)}`}
-          helper="Expected improvement from the best recommendation."
+          helper="Best available improvement from one movement change."
           tooltip="If the recommended player movement is made, how much would the state score improve? +5% means the team's tactical situation gets moderately better."
           tone="warning"
         />
         <MetricCard
           label="Phase Class"
           value={formatLabel(data.analyzeSequence.phase_classification)}
-          helper="Current tactical phase for the selected sequence."
+          helper="Names the tactical situation in this time window."
           tooltip="What type of tactical moment is this? Build Up = playing from the back. Progression = moving up the pitch. Chance Creation = creating a shooting opportunity. Pressing = trying to win the ball back. Transition = switching between attack and defense."
           tone="neutral"
         />
         <MetricCard
           label="Confidence"
           value={formatPercent(data.analyzeSequence.confidence, 0)}
-          helper="Model certainty for the top recommendation."
+          helper="Indicates how stable the top recommendation looks."
           tooltip="How reliable is this recommendation? Higher = the model is more certain this movement would help."
           tone="neutral"
         />
@@ -172,9 +172,6 @@ export function MatchAnalysis({
                   </div>
                   <p className="mt-3 text-sm font-medium leading-6 text-[var(--ink)]">
                     {buildCoachRecommendation(recommendation)}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                    Model note: {recommendation.explanation}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
                     Predicted gain {formatPercent(recommendation.improvement, 0)} with{" "}

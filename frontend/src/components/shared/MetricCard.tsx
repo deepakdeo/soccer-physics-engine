@@ -22,7 +22,7 @@ export function MetricCard({
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Badge tone={tone}>{label}</Badge>
-          <InfoTooltip content={tooltip ?? helper} />
+          {tooltip ? <InfoTooltip content={tooltip} /> : null}
         </div>
         <CardTitle className="text-4xl">{value}</CardTitle>
         <CardDescription>{helper}</CardDescription>

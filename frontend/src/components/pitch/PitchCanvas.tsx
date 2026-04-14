@@ -76,12 +76,6 @@ export function PitchCanvas({
         </div>
       </CardHeader>
       <div className="relative p-4 md:p-6">
-        <div className="mb-4 rounded-[20px] border border-[var(--line)] bg-white/75 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
-          This shows a snapshot from the match at the selected time. Green dots = home team
-          players. Orange dots = away team players. Shaded areas show which team controls that
-          space. Dashed lines show available passing lanes. Orange arrows show recommended
-          movement.
-        </div>
         <div className="absolute left-8 top-8 z-10 rounded-full border border-white/25 bg-[rgba(10,31,22,0.72)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
           {windowLabel}
         </div>
@@ -207,6 +201,12 @@ export function PitchCanvas({
             yScale={yScale}
           />
         </svg>
+        <div className="mt-4 rounded-[20px] border border-[var(--line)] bg-white/75 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+          This shows a snapshot from the match at the selected time. Green dots = home team
+          players. Orange dots = away team players. Shaded areas show which team controls that
+          space. Dashed lines show available passing lanes. Orange arrows show recommended
+          movement.
+        </div>
       </div>
     </Card>
   );

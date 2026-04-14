@@ -37,24 +37,28 @@ export function LoadMonitor({ data }: LoadMonitorProps) {
           label="Tracked Players"
           value={String(profiles.length)}
           helper="Players with load monitoring output in this report."
+          tooltip="How many players are included in this monitoring snapshot. A full match report should usually cover both teams, so a lower count often means the incoming feed is partial."
           tone="neutral"
         />
         <MetricCard
           label="HI Distance"
           value={`${totalHighIntensity.toFixed(0)}m`}
           helper="Total high-intensity distance across monitored players."
+          tooltip="Combined meters covered at high speed by the squad in this match. Higher totals usually point to a more open game with more transitions and repeated recovery runs."
           tone="accent"
         />
         <MetricCard
           label="Sharp Decels"
           value={String(totalDecels)}
           helper="Aggregate deceleration events in the sample windows."
+          tooltip="Hard braking actions across the squad. These are mechanically demanding because stopping quickly places more stress on joints and soft tissue than steady running."
           tone="warning"
         />
         <MetricCard
           label="Load Flags"
           value={String(flaggedPlayers)}
           helper="Players currently marked for monitoring."
+          tooltip="Number of players whose physical workload has crossed monitoring thresholds during this match. These players may benefit from substitution or reduced training load."
           tone={flaggedPlayers > 0 ? "danger" : "success"}
         />
       </section>
@@ -73,7 +77,10 @@ export function LoadMonitor({ data }: LoadMonitorProps) {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.2fr_1fr]">
-        <FatigueCurves fatigueCurves={data.matchReport.fatigue_curves} />
+        <FatigueCurves
+          fatigueCurves={data.matchReport.fatigue_curves}
+          profiles={profiles}
+        />
         <AsymmetryView profiles={profiles} />
       </section>
     </div>

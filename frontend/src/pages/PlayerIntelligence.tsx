@@ -79,24 +79,28 @@ export function PlayerIntelligence({
           label="Role"
           value={formatLabel(selectedComparison.role)}
           helper="Detected functional role in the current profile window."
+          tooltip="The job this player actually performed based on movement patterns in the match, which can differ from the listed lineup position."
           tone="neutral"
         />
         <MetricCard
           label="Tactical Value"
           value={formatPercent(selectedComparison.tacticalValue, 0)}
           helper="Composite tactical value within peer context."
+          tooltip="How much this player helps the team through positioning, passing options, and defensive contribution — higher means more impactful compared to teammates in similar roles."
           tone="accent"
         />
         <MetricCard
           label="Efficiency"
           value={formatPercent(selectedComparison.movementEfficiency, 0)}
           helper="Experimental composite movement metric."
+          tooltip="Experimental score comparing tactical contribution to movement cost. Use it to compare players with similar roles, not as a definitive player rating."
           tone="success"
         />
         <MetricCard
           label="Off-Ball Value"
           value={formatPercent(selectedComparison.offBallValue, 0)}
           helper={`${selectedComparison.loadFlagCount} load flags in the comparison set.`}
+          tooltip="How much the player helps the attack without touching the ball by offering support angles, stretching defenders, and creating safer options for teammates."
           tone="warning"
         />
       </section>
