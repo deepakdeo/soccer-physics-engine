@@ -9,6 +9,10 @@
 
 A decision-support tool for soccer analysts, coaches, and performance staff. Takes player tracking data and produces tactical analysis, physical load monitoring, and player movement intelligence.
 
+![Match Analysis](assets/demo_screenshots/match_analysis.png)
+
+*Tactical snapshot from a build-up phase — showing pitch control zones, passing lanes with probabilities, and a movement recommendation.*
+
 ## What it does
 
 ### Tactical analysis
@@ -81,8 +85,16 @@ AWS ECS      Vercel
 ## Screenshots
 
 ![Match Analysis](assets/demo_screenshots/match_analysis.png)
+*Match Analysis — pitch state with tactical overlays*
+
+![Pass Network](assets/demo_screenshots/pass_network.png)
+*Pass Network — passing connections for both teams with probability labels*
+
 ![Load Monitor](assets/demo_screenshots/load_monitor.png)
+*Load Monitor — biomechanical load table and fatigue curves*
+
 ![Player Intelligence](assets/demo_screenshots/player_intelligence.png)
+*Player Intelligence — efficiency scatter and role detection*
 
 ## Quick start
 
