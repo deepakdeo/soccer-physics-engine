@@ -57,3 +57,39 @@ def test_load_tracking_data_converts_wide_frame_to_long(monkeypatch: Any) -> Non
     assert set(loaded["team"].to_list()) == {"home", "away"}
     assert loaded["x"].max() == 84.0
     assert loaded["ball_y"].min() == 30.6
+
+
+def test_load_tracking_data_normalizes_long_form_player_ids(monkeypatch: Any) -> None:
+    long_frame = pd.DataFrame(
+        {
+            "frame_id": [1, 1],
+            "timestamp": [0.0, 0.0],
+            "player_id": [
+                "Player(team=Home, jersey_no=11)",
+                "away-player-7",
+            ],
+            "team": ["Home Team", "Away Team"],
+            "x": [0.1, 0.8],
+            "y": [0.2, 0.7],
+        }
+    )
+
+    monkeypatch.setattr(
+        metrica_loader,
+        "_resolve_match_paths",
+        lambda _match_id: {
+            "home_data": Path("home.csv"),
+            "away_data": Path("away.csv"),
+            "event_data": Path("events.csv"),
+        },
+    )
+    monkeypatch.setattr(
+        metrica_loader,
+        "_load_kloppy_dataset",
+        lambda _paths: FakeDataset(long_frame),
+    )
+
+    loaded = metrica_loader.load_tracking_data("sample_game_1")
+
+    assert set(loaded["team"].to_list()) == {"home", "away"}
+    assert set(loaded["player_id"].to_list()) == {"home_11", "away_7"}

@@ -48,6 +48,23 @@ def test_analyze_sequence_endpoint_returns_recommendations() -> None:
     assert payload["load_snapshot"]["player_id"] == "home_2"
 
 
+def test_analyze_sequence_returns_404_for_unknown_focus_player() -> None:
+    response = client.post(
+        "/analyze-sequence",
+        json={
+            "dataset": "metrica",
+            "match_id": "sample_game_1",
+            "start_time_s": 0.0,
+            "end_time_s": 6.0,
+            "focus_team": "home",
+            "focus_player_id": "home_99",
+            "mode": "single",
+        },
+    )
+
+    assert response.status_code == 404
+
+
 def test_match_report_endpoint_returns_core_sections() -> None:
     response = client.post(
         "/match-report",

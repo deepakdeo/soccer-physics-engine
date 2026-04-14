@@ -105,9 +105,12 @@ def analyze_sequence(
         if request.focus_player_id is not None
         else (primary_recommendation.player_id if primary_recommendation is not None else "home_1")
     )
-    player_report = _build_player_report_for_player(
-        repository, request.match_id, snapshot_player_id
-    )
+    try:
+        player_report = _build_player_report_for_player(
+            repository, request.match_id, snapshot_player_id
+        )
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
     return AnalyzeSequenceResponse(
         state_score=float(state.score),
         pitch_control=float(state.metrics["pitch_control_pct"]),

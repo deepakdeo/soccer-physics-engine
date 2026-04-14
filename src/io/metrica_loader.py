@@ -157,8 +157,11 @@ def _normalize_long_tracking_frame(frame: pd.DataFrame) -> pd.DataFrame:
     output = normalized[
         ["frame_id", "timestamp", "player_id", "team", "x", "y", "ball_x", "ball_y"]
     ].copy()
-    output["team"] = output["team"].astype(str).str.lower()
-    output["player_id"] = output["player_id"].astype(str)
+    output["team"] = output["team"].map(_canonicalize_team_name)
+    output["player_id"] = [
+        _canonicalize_player_id(player_id, team)
+        for player_id, team in zip(output["player_id"], output["team"], strict=True)
+    ]
     output["frame_id"] = output["frame_id"].astype(int)
     output["timestamp"] = output["timestamp"].astype(float)
     for column, scale in (
@@ -250,6 +253,48 @@ def _normalize_column_name(column: str) -> str:
 
 def _format_player_id(label: str) -> str:
     return re.sub(r"\W+", "_", label.strip().lower()).strip("_")
+
+
+def _canonicalize_team_name(team_value: Any) -> str:
+    normalized = _format_player_id(str(team_value))
+    if normalized.startswith("home"):
+        return "home"
+    if normalized.startswith("away"):
+        return "away"
+    if normalized.startswith("ball"):
+        return "ball"
+    return normalized
+
+
+def _canonicalize_player_id(player_value: Any, team: str) -> str:
+    normalized_team = _canonicalize_team_name(team)
+    raw_player_id = str(player_value).strip()
+    normalized_player_id = _format_player_id(raw_player_id)
+
+    if normalized_team not in {"home", "away"}:
+        return normalized_player_id
+
+    team_number_match = re.search(
+        rf"{re.escape(normalized_team)}[^\d]*([0-9]+)",
+        normalized_player_id,
+    )
+    if team_number_match is not None:
+        return f"{normalized_team}_{int(team_number_match.group(1))}"
+
+    named_number_match = re.search(
+        r"(?:jersey(?:_no)?|shirt(?:_number)?|player_id|player|number|num)[^\d]*([0-9]+)",
+        normalized_player_id,
+    )
+    if named_number_match is not None:
+        return f"{normalized_team}_{int(named_number_match.group(1))}"
+
+    number_matches = re.findall(r"[0-9]+", normalized_player_id)
+    if len(number_matches) == 1:
+        return f"{normalized_team}_{int(number_matches[0])}"
+    if len(number_matches) > 1:
+        return f"{normalized_team}_{int(number_matches[0])}"
+
+    return normalized_player_id
 
 
 def _infer_team_name(label: str) -> str:
