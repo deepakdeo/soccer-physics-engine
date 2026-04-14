@@ -30,6 +30,9 @@ export function Recommendations({
       {recommendations.map((recommendation) => {
         const isActive =
           selectedPlayerId === undefined || recommendation.player_id === selectedPlayerId;
+        const label = `${Math.round(recommendation.confidence * 100)}%`;
+        const labelX = xScale(recommendation.end[0]) + 18;
+        const labelY = yScale(recommendation.end[1]) - 16;
 
         return (
           <g
@@ -48,20 +51,32 @@ export function Recommendations({
             <circle
               cx={xScale(recommendation.end[0])}
               cy={yScale(recommendation.end[1])}
-              r={12}
+              r={10}
               fill="#f97316"
             />
-            <text
-              x={xScale(recommendation.end[0])}
-              y={yScale(recommendation.end[1]) + 1}
-              fill="#fff7ed"
-              fontSize={10}
-              fontWeight={700}
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              {Math.round(recommendation.confidence * 100)}
-            </text>
+            <g transform={`translate(${labelX}, ${labelY})`}>
+              <rect
+                x={-16}
+                y={-9}
+                width={32}
+                height={18}
+                rx={9}
+                fill="rgba(249,115,22,0.94)"
+                stroke="rgba(255,247,237,0.55)"
+                strokeWidth={1}
+              />
+              <text
+                x={0}
+                y={0.5}
+                fill="#fff7ed"
+                fontSize={8.5}
+                fontWeight={700}
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                {label}
+              </text>
+            </g>
             <title>{recommendation.explanation}</title>
           </g>
         );

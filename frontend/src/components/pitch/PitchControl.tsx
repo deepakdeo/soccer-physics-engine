@@ -12,7 +12,6 @@ export function PitchControl({ heatMap, xScale, yScale }: PitchControlProps) {
     return null;
   }
 
-  const maxValue = Math.max(...heatMap.flat(), 1);
   const pitchWidth = xScale(105) - xScale(0);
   const pitchHeight = yScale(68) - yScale(0);
   const cellWidth = pitchWidth / columns;
@@ -22,7 +21,9 @@ export function PitchControl({ heatMap, xScale, yScale }: PitchControlProps) {
     <g>
       {heatMap.map((row, rowIndex) =>
         row.map((value, columnIndex) => {
-          const opacity = 0.06 + (value / maxValue) * 0.34;
+          const dominance = Math.abs(value - 0.5) * 2;
+          const opacity = 0.16 + dominance * 0.38;
+          const fill = value >= 0.5 ? "#14b8a6" : "#fb923c";
 
           return (
             <rect
@@ -31,7 +32,7 @@ export function PitchControl({ heatMap, xScale, yScale }: PitchControlProps) {
               y={yScale((rowIndex * 68) / rows)}
               width={cellWidth}
               height={cellHeight}
-              fill="#34d399"
+              fill={fill}
               opacity={opacity}
             />
           );

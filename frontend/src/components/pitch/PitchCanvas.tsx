@@ -56,8 +56,8 @@ export function PitchCanvas({
         <div>
           <CardTitle className="text-3xl">Pitch State</CardTitle>
           <CardDescription>
-            D3-scaled field geometry with pitch control, passing lanes, team shape, and
-            movement recommendations over one reference sequence.
+            Tactical snapshot showing player positions, available passes, space control, and
+            suggested movement.
           </CardDescription>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">

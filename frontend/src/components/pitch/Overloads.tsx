@@ -12,6 +12,10 @@ export function Overloads({ zones, xScale, yScale }: OverloadsProps) {
     <g>
       {zones.map((zone) => {
         const fill = zone.team === "home" ? "#2dd4bf" : "#fb923c";
+        const displayLabel =
+          zone.label.trim().toLowerCase() === "transition lane"
+            ? "Open channel"
+            : formatLabel(zone.label);
 
         return (
           <g key={`${zone.label}-${zone.x}-${zone.y}`}>
@@ -35,7 +39,7 @@ export function Overloads({ zones, xScale, yScale }: OverloadsProps) {
               fontWeight={700}
               textAnchor="middle"
             >
-              {formatLabel(zone.label)}
+              {displayLabel}
             </text>
           </g>
         );
